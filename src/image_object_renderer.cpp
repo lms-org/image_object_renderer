@@ -170,13 +170,18 @@ void ImageObjectRenderer::drawObject(const street_environment::EnvironmentObject
 }
 
 void ImageObjectRenderer::drawObstacle(const street_environment::Obstacle *obstacle){
-    drawVertex2f(obstacle->position());
     float lineWidth = 0.01;
     float lineWidthStep = 0.01;
+    //Draw points
+    for(lms::math::vertex2f v:obstacle->points()){
+        drawVertex2f(v);
+    }
+    //TODO draw bounding box!
+    /*
     lms::math::vertex2f toAdd = obstacle->viewDirection().rotateAntiClockwise90deg()*obstacle->width();
     for(float i = -lineWidth; i <= lineWidth; i += lineWidthStep){
         drawLine(obstacle->position()-toAdd+obstacle->viewDirection()*i, obstacle->position()+toAdd+obstacle->viewDirection()*i);
-    }
+    }*/
 }
 
 void ImageObjectRenderer::drawPolyLine(const lms::math::polyLine2f *lane){
