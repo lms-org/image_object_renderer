@@ -1,9 +1,5 @@
 #include "image_object_renderer.h"
-#include "lms/imaging_detection/line.h"
 #include "street_environment/start_line.h"
-
-#include "lms/imaging/warp.h"
-#include "area_of_detection/area_of_detection.h"
 
 bool ImageObjectRenderer::initialize() {
     //get all elements that you want to draw

@@ -4,7 +4,6 @@
 #include "lms/module.h"
 #include "lms/imaging/image.h"
 #include "lms/imaging/graphics.h"
-#include "lms/imaging_detection/image_hint.h"
 #include "lms/imaging/image.h"
 #include "street_environment/road.h"
 #include "street_environment/obstacle.h"
