@@ -30,6 +30,8 @@ private:
     std::vector<lms::ReadDataChannel<lms::math::polyLine2f>> toDrawPolyLines;
     std::vector<lms::ReadDataChannel<lms::math::vertex2f>> toDrawVertex2f;
     std::vector<lms::ReadDataChannel<std::pair<lms::math::vertex2f,lms::math::vertex2f>>> toDrawVertex4f;
+    int xToImage(float x);
+    int yToImage(float y);
     void drawObstacle(const street_environment::Obstacle *obstacle);
     void drawPolyLine(const lms::math::polyLine2f *lane);
     void drawVertex2f(const lms::math::vertex2f &v,int length = 5);
@@ -40,6 +42,8 @@ private:
     void drawLine(float x1, float y1, float x2, float y2);
     void drawLine(lms::math::vertex2f p1, lms::math::vertex2f p2);
     void drawTrajectory(const street_environment::Trajectory &tra);
+    void drawRoadMatrix(const street_environment::RoadMatrix &rm);
+    void drawTriangle(lms::math::vertex2f v1, lms::math::vertex2f v2, lms::math::vertex2f v3,bool filled);
     /**
      * @brief setColor
      * @param toDrawName

@@ -66,11 +66,43 @@ bool ImageObjectRenderer::cycle() {
         }else if(dO.castableTo<street_environment::Trajectory>()){
             logger.debug("")<< "drawing trajectory";
             drawTrajectory(*dO.getWithType<street_environment::Trajectory>());
+        }else if(dO.castableTo<street_environment::RoadMatrix>()){
+            logger.debug("")<< "drawing RoadMatrix";
+            drawRoadMatrix(*dO.getWithType<street_environment::RoadMatrix>());
         }else{
             logger.error("cycle")<<"No valid type for "<<dO.name();
         }
     }
     return true;
+}
+
+
+void ImageObjectRenderer::drawRoadMatrix(const street_environment::RoadMatrix &rm){
+    for(int x = 0; x < rm.length(); x++){
+        for(int y = 0; y < rm.width(); y++){
+            street_environment::RoadMatrixCell rmc = rm.cell(x,y);
+            lms::imaging::ARGBColor color=lms::imaging::ARGBColor(230,255*rmc.badness(),255-255*rmc.badness(),0);
+            graphics->setColor(color);
+            drawTriangle(rmc.points[0],rmc.points[1],rmc.points[2],true);
+            drawTriangle(rmc.points[0],rmc.points[2],rmc.points[3],true);
+        }
+    }
+}
+
+void ImageObjectRenderer::drawTriangle(lms::math::vertex2f v1, lms::math::vertex2f v2, lms::math::vertex2f v3,bool filled){
+    if(filled){
+        graphics->fillTriangle(xToImage(v1.x),yToImage(v1.y),xToImage(v2.x),yToImage(v2.y),xToImage(v3.x),yToImage(v3.y));
+    }else{
+        graphics->drawTriangle(xToImage(v1.x),yToImage(v1.y),xToImage(v2.x),yToImage(v2.y),xToImage(v3.x),yToImage(v3.y));
+    }
+}
+
+int ImageObjectRenderer::xToImage(float x){
+    return x*image->height()/5;
+}
+
+int ImageObjectRenderer::yToImage(float y){
+    return -y*image->width()/5+image->width()/2;
 }
 
 
@@ -212,7 +244,7 @@ bool ImageObjectRenderer::setColor(std::string toDrawName){
       }else{
         m_config = &config();
     }
-    lms::imaging::ARGBColor color=lms::imaging::ARGBColor(m_config->get<int>("colorR"),
+    lms::imaging::ARGBColor color=lms::imaging::ARGBColor(m_config->get<int>("colorA",255),m_config->get<int>("colorR"),
                                                            m_config->get<int>("colorG"),m_config->get<int>("colorB"));
     graphics->setColor(color);
     return customColor;
