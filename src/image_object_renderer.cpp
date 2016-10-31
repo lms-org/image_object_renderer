@@ -112,7 +112,7 @@ void ImageObjectRenderer::drawTrajectory(const street_environment::Trajectory &t
             lms::imaging::ARGBColor color=lms::imaging::ARGBColor(0,0,0);
             graphics->setColor(color);
         }else{
-            lms::imaging::ARGBColor color=lms::imaging::ARGBColor(0,255,0);
+            lms::imaging::ARGBColor color=lms::imaging::ARGBColor(0,255,255);
             graphics->setColor(color);
         }
         drawLine(tra[i-1].position.x,tra[i-1].position.y,tra[i].position.x,tra[i].position.y);
