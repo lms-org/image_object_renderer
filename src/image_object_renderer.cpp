@@ -80,11 +80,16 @@ bool ImageObjectRenderer::cycle() {
 void ImageObjectRenderer::drawRoadMatrix(const street_environment::RoadMatrix &rm){
     for(int x = 0; x < rm.length(); x++){
         for(int y = 0; y < rm.width(); y++){
-            street_environment::RoadMatrixCell rmc = rm.cell(x,y);
-            lms::imaging::ARGBColor color=lms::imaging::ARGBColor(230,255*rmc.badness(),255-255*rmc.badness(),0);
+            street_environment::RoadMatrixCell cell = rm.cell(x,y);
+            lms::imaging::ARGBColor color;
+            if (cell.hasObstacle) {
+                color = lms::imaging::ARGBColor(230,255,0,0);
+            } else {
+                color = lms::imaging::ARGBColor(230,0,255,0);
+            }
             graphics->setColor(color);
-            drawTriangle(rmc.points[0],rmc.points[1],rmc.points[2],true);
-            drawTriangle(rmc.points[0],rmc.points[2],rmc.points[3],true);
+            drawTriangle(cell.points[0],cell.points[1],cell.points[2],true);
+            drawTriangle(cell.points[0],cell.points[2],cell.points[3],true);
         }
     }
 }
