@@ -6,6 +6,7 @@
 #include "lms/imaging/graphics.h"
 #include "lms/imaging/image.h"
 #include "street_environment/road.h"
+#include "street_environment/road_matrix/road_matrix.h"
 #include "street_environment/obstacle.h"
 #include "street_environment/trajectory.h"
 #include "street_environment/crossing.h"
