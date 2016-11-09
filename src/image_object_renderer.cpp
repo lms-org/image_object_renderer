@@ -1,5 +1,6 @@
 #include "image_object_renderer.h"
 #include "street_environment/start_line.h"
+#include "street_environment/road_matrix/road_matrix.h"
 
 bool ImageObjectRenderer::initialize() {
     //get all elements that you want to draw
@@ -81,7 +82,8 @@ void ImageObjectRenderer::drawRoadMatrix(const street_environment::RoadMatrix &r
     for(int x = 0; x < rm.length(); x++){
         for(int y = 0; y < rm.width(); y++){
             street_environment::RoadMatrixCell rmc = rm.cell(x,y);
-            lms::imaging::ARGBColor color=lms::imaging::ARGBColor(230,255*rmc.badness(),255-255*rmc.badness(),0);
+            float badness = rmc.hasObstacle;
+            lms::imaging::ARGBColor color=lms::imaging::ARGBColor(230,255*badness,255-255*badness,0);
             graphics->setColor(color);
             drawTriangle(rmc.points[0],rmc.points[1],rmc.points[2],true);
             drawTriangle(rmc.points[0],rmc.points[2],rmc.points[3],true);
