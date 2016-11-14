@@ -185,7 +185,7 @@ void ImageObjectRenderer::drawObject(const street_environment::EnvironmentObject
                 setColor("CROSSING_NOT_TRUSTED");
             }
         //}
-        lms::math::vertex2f toAdd  =crossing.viewDirection();
+        lms::math::vertex2f toAdd  =crossing.viewDirection().normalize();
         toAdd = toAdd.rotateAntiClockwise90deg() * 0.2;
         for(float i = -lineWidth; i <= lineWidth; i += lineWidthStep){
             drawLine(crossing.position()-toAdd+crossing.viewDirection()*i, crossing.position()+toAdd+crossing.viewDirection()*i);
