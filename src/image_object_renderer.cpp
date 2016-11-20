@@ -1,6 +1,5 @@
 #include "image_object_renderer.h"
 #include "street_environment/start_line.h"
-#include "street_environment/road_matrix/road_matrix.h"
 
 bool ImageObjectRenderer::initialize() {
     //get all elements that you want to draw
