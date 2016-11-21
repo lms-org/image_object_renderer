@@ -9,7 +9,7 @@
 #include "street_environment/obstacle.h"
 #include "street_environment/trajectory.h"
 #include "street_environment/crossing.h"
-#include "street_environment/road_matrix/road_matrix.h"
+#include "street_environment/roadmatrix.h"
 
 class ImageObjectRenderer : public lms::Module {
 public:
