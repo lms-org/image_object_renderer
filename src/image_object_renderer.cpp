@@ -77,9 +77,9 @@ bool ImageObjectRenderer::cycle() {
             drawRoadMatrix(*dO.getWithType<street_environment::RoadMatrix>());
         } else if (dO.castableTo<lms::math::PointCloud2f>()) {
             drawPointCloud2f(*dO.getWithType<lms::math::PointCloud2f>());
-        }else if (dO.castableTo<street_environment::BoundedObstacles>()) {
+        }else if (dO.castableTo<street_environment::BoundingBox2fVector>()) {
             drawBoundedObstacles(
-                *dO.getWithType<street_environment::BoundedObstacles>());
+                *dO.getWithType<street_environment::BoundingBox2fVector>());
         } else {
             logger.error("cycle") << "No valid type for " << dO.name();
         }
@@ -181,15 +181,14 @@ void ImageObjectRenderer::drawTrajectoryPoint(const street_environment::Trajecto
 }
 
 void ImageObjectRenderer::drawBoundedObstacles(
-    const street_environment::BoundedObstacles &obstacles) {
-    logger.debug() << "drawing " << obstacles.size() << " bounded obstacles";
+    const street_environment::BoundingBox2fVector &obstacles) {
     for(const auto& box : obstacles) {
         drawBoundingBox(box);
     }
 }
 
 void ImageObjectRenderer::drawBoundingBox(
-    const street_environment::BoundingBox &boundingBox) {
+    const street_environment::BoundingBox2f&boundingBox) {
     drawLine(boundingBox.corners()[0],boundingBox.corners()[1]);
     drawLine(boundingBox.corners()[1],boundingBox.corners()[2]);
     drawLine(boundingBox.corners()[2],boundingBox.corners()[3]);

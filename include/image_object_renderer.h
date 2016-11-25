@@ -48,8 +48,8 @@ private:
     void drawRoadMatrix(const street_environment::RoadMatrix &rm);
     void drawTriangle(lms::math::vertex2f v1, lms::math::vertex2f v2, lms::math::vertex2f v3,bool filled);
     void drawPointCloud2f(const lms::math::PointCloud2f& pointCloud);
-    void drawBoundedObstacles(const street_environment::BoundedObstacles &obstacles);
-    void drawBoundingBox(const street_environment::BoundingBox &boundingBox);
+    void drawBoundedObstacles(const street_environment::BoundingBox2fVector &obstacles);
+    void drawBoundingBox(const street_environment::BoundingBox2f&boundingBox);
     /**
      * @brief setColor
      * @param toDrawName
