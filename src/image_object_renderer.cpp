@@ -75,7 +75,9 @@ bool ImageObjectRenderer::cycle() {
         } else if (dO.castableTo<street_environment::RoadMatrix>()) {
             logger.debug("") << "drawing RoadMatrix";
             drawRoadMatrix(*dO.getWithType<street_environment::RoadMatrix>());
-        } else if (dO.castableTo<street_environment::BoundedObstacles>()) {
+        } else if (dO.castableTo<lms::math::PointCloud2f>()) {
+            drawPointCloud2f(*dO.getWithType<lms::math::PointCloud2f>());
+        }else if (dO.castableTo<street_environment::BoundedObstacles>()) {
             drawBoundedObstacles(
                 *dO.getWithType<street_environment::BoundedObstacles>());
         } else {
@@ -99,6 +101,12 @@ void ImageObjectRenderer::drawRoadMatrix(const street_environment::RoadMatrix &r
             drawTriangle(rmc.points[0],rmc.points[1],rmc.points[2],true);
             drawTriangle(rmc.points[0],rmc.points[2],rmc.points[3],true);
         }
+    }
+}
+
+void ImageObjectRenderer::drawPointCloud2f(const lms::math::PointCloud2f &pointCloud) {
+    for (const lms::math::vertex2f &point : pointCloud.points()) {
+        drawVertex2f(point, 1);
     }
 }
 

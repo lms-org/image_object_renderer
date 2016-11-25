@@ -4,6 +4,7 @@
 #include "lms/imaging/graphics.h"
 #include "lms/imaging/image.h"
 #include "lms/imaging/image.h"
+#include "lms/math/point_cloud.h"
 #include "lms/module.h"
 #include "street_environment/bounding_box.h"
 #include "street_environment/crossing.h"
@@ -46,6 +47,7 @@ private:
     void drawTrajectory(const street_environment::Trajectory &tra);
     void drawRoadMatrix(const street_environment::RoadMatrix &rm);
     void drawTriangle(lms::math::vertex2f v1, lms::math::vertex2f v2, lms::math::vertex2f v3,bool filled);
+    void drawPointCloud2f(const lms::math::PointCloud2f& pointCloud);
     void drawBoundedObstacles(const street_environment::BoundedObstacles &obstacles);
     void drawBoundingBox(const street_environment::BoundingBox &boundingBox);
     /**
