@@ -1,5 +1,6 @@
 #include "image_object_renderer.h"
 #include "street_environment/start_line.h"
+#include <math.h>
 
 bool ImageObjectRenderer::initialize() {
     //get all elements that you want to draw
@@ -32,50 +33,59 @@ bool ImageObjectRenderer::deinitialize() {
 }
 
 bool ImageObjectRenderer::cycle() {
-   image->fill(0);
-    for(lms::ReadDataChannel<lms::Any> &dO :drawObjects){
-        //set the color
-        logger.debug("trying to draw: ")<< dO.name();
+    image->fill(0);
+    for (lms::ReadDataChannel<lms::Any> &dO : drawObjects) {
+        // set the color
+        logger.debug("trying to draw: ") << dO.name();
         bool customColor = setColor(dO.name());
-        if(dO.castableTo<lms::math::polyLine2f>()){//lms::math::polyLine2f
-            int crossLength = config(dO.name()).get<int>("crossLength",2);
-            if(config(dO.name()).get<std::string>("attr","") == "point"){
-                for(lms::math::vertex2f v: dO.getWithType<lms::math::polyLine2f>()->points()){
-                    drawVertex2f(v,crossLength);
+        if (dO.castableTo<lms::math::polyLine2f>()) {
+            int crossLength = config(dO.name()).get<int>("crossLength", 2);
+            if (config(dO.name()).get<std::string>("attr", "") == "point") {
+                for (lms::math::vertex2f v :
+                     dO.getWithType<lms::math::polyLine2f>()->points()) {
+                    drawVertex2f(v, crossLength);
                 }
-            }else{
+            } else {
                 drawPolyLine(dO.getWithType<lms::math::polyLine2f>());
             }
-        }else if(dO.castableTo<lms::math::vertex2f>()){
+        } else if (dO.castableTo<lms::math::vertex2f>()) {
             drawVertex2f(*dO.getWithType<lms::math::vertex2f>());
-            logger.debug("")<< "drawing v2f";
-        }else if(dO.castableTo<street_environment::EnvironmentObjects>()){
-            logger.debug("")<< "drawing evo";
-            for(const std::shared_ptr<street_environment::EnvironmentObject> &eo:
-                    (dO.getWithType<street_environment::EnvironmentObjects>()->objects)){
-                    drawObject(eo.get(), customColor);
+            logger.debug("") << "drawing v2f";
+        } else if (dO.castableTo<street_environment::EnvironmentObjects>()) {
+            logger.debug("") << "drawing evo";
+            for (const std::shared_ptr<street_environment::EnvironmentObject>
+                     &eo :
+                 (dO.getWithType<street_environment::EnvironmentObjects>()
+                      ->objects)) {
+                drawObject(eo.get(), customColor);
             }
-        }else if(dO.castableTo<street_environment::TrajectoryPoint>()){
-            logger.debug("")<< "drawing TrajectoryPoint";
-            drawTrajectoryPoint(*(dO.getWithType<street_environment::TrajectoryPoint>()));
-        }else if(dO.castableTo<std::vector<lms::math::Rect>>()){
-            logger.debug("")<< "drawing rects";
-            for(lms::math::Rect r: *dO.getWithType<std::vector<lms::math::Rect>>()){
+        } else if (dO.castableTo<street_environment::TrajectoryPoint>()) {
+            logger.debug("") << "drawing TrajectoryPoint";
+            drawTrajectoryPoint(
+                *(dO.getWithType<street_environment::TrajectoryPoint>()));
+        } else if (dO.castableTo<std::vector<lms::math::Rect>>()) {
+            logger.debug("") << "drawing rects";
+            for (lms::math::Rect r :
+                 *dO.getWithType<std::vector<lms::math::Rect>>()) {
                 drawRect(r);
             }
-        }else if(dO.castableTo<street_environment::Trajectory>()){
-            logger.debug("")<< "drawing trajectory";
+        } else if (dO.castableTo<street_environment::Trajectory>()) {
+            logger.debug("") << "drawing trajectory";
             drawTrajectory(*dO.getWithType<street_environment::Trajectory>());
-        }else if(dO.castableTo<street_environment::RoadMatrix>()){
-            logger.debug("")<< "drawing RoadMatrix";
+        } else if (dO.castableTo<street_environment::RoadMatrix>()) {
+            logger.debug("") << "drawing RoadMatrix";
             drawRoadMatrix(*dO.getWithType<street_environment::RoadMatrix>());
-        }else{
-            logger.error("cycle")<<"No valid type for "<<dO.name();
+        } else if (dO.castableTo<lms::math::PointCloud2f>()) {
+            drawPointCloud2f(*dO.getWithType<lms::math::PointCloud2f>());
+        }else if (dO.castableTo<street_environment::BoundingBox2fVector>()) {
+            drawBoundedObstacles(
+                *dO.getWithType<street_environment::BoundingBox2fVector>());
+        } else {
+            logger.error("cycle") << "No valid type for " << dO.name();
         }
     }
     return true;
 }
-
 
 void ImageObjectRenderer::drawRoadMatrix(const street_environment::RoadMatrix &rm){
     for(int x = 0; x < rm.length(); x++){
@@ -91,6 +101,12 @@ void ImageObjectRenderer::drawRoadMatrix(const street_environment::RoadMatrix &r
             drawTriangle(rmc.points[0],rmc.points[1],rmc.points[2],true);
             drawTriangle(rmc.points[0],rmc.points[2],rmc.points[3],true);
         }
+    }
+}
+
+void ImageObjectRenderer::drawPointCloud2f(const lms::math::PointCloud2f &pointCloud) {
+    for (const lms::math::vertex2f &point : pointCloud.points()) {
+        drawVertex2f(point, 1);
     }
 }
 
@@ -162,6 +178,21 @@ void ImageObjectRenderer::drawVertex2f(const lms::math::vertex2f &v, int length)
 void ImageObjectRenderer::drawTrajectoryPoint(const street_environment::TrajectoryPoint &v){
     drawVertex2f(lms::math::vertex2f(v.position.x,v.position.y));
     //TODO draw direction
+}
+
+void ImageObjectRenderer::drawBoundedObstacles(
+    const street_environment::BoundingBox2fVector &obstacles) {
+    for(const auto& box : obstacles) {
+        drawBoundingBox(box);
+    }
+}
+
+void ImageObjectRenderer::drawBoundingBox(
+    const street_environment::BoundingBox2f&boundingBox) {
+    drawLine(boundingBox.corners()[0],boundingBox.corners()[1]);
+    drawLine(boundingBox.corners()[1],boundingBox.corners()[2]);
+    drawLine(boundingBox.corners()[2],boundingBox.corners()[3]);
+    drawLine(boundingBox.corners()[3],boundingBox.corners()[0]);
 }
 
 void ImageObjectRenderer::drawObject(const street_environment::EnvironmentObject *eo, bool customColor){
