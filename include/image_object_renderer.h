@@ -19,10 +19,6 @@ public:
     bool deinitialize() override;
     bool cycle() override;
 private:
-
-    float translateY(float y);
-    float translateX(float x);
-
     std::vector<std::string> vertex4f;
     std::vector<std::string> drawObjectStrings;
     std::vector<lms::ReadDataChannel<lms::Any>> drawObjects;
