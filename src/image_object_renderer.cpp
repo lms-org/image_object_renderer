@@ -136,7 +136,8 @@ void ImageObjectRenderer::drawTriangle(lms::math::vertex2f v1, lms::math::vertex
 }
 
 int ImageObjectRenderer::xToImage(float x){
-    return x * image->height() / 5 + 0.8 * image->height() / 5;
+    return x * image->height() / 5 +
+           config().get<float>("translateX", 512) * image->height() / 5;
 }
 
 int ImageObjectRenderer::yToImage(float y){
