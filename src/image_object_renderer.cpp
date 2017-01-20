@@ -242,10 +242,14 @@ void ImageObjectRenderer::drawObstacle(const street_environment::Obstacle *obsta
     float lineWidth = 0.01;
     float lineWidthStep = 0.01;
     //Draw points
-    for(lms::math::vertex2f v:obstacle->points()){
-        drawVertex2f(v);
-    }
+    drawVertex2f(obstacle->position());
+
     //TODO draw bounding box!
+    street_environment::BoundingBox2f box = obstacle->boundingBox();
+    drawLine(box.corners()[0],box.corners()[1]);
+    drawLine(box.corners()[1],box.corners()[2]);
+    drawLine(box.corners()[2],box.corners()[3]);
+    drawLine(box.corners()[3],box.corners()[0]);
     /*
     lms::math::vertex2f toAdd = obstacle->viewDirection().rotateAntiClockwise90deg()*obstacle->width();
     for(float i = -lineWidth; i <= lineWidth; i += lineWidthStep){
