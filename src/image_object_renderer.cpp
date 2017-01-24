@@ -41,7 +41,8 @@ bool ImageObjectRenderer::cycle() {
             drawVertex2f(*dO.getWithType<lms::math::vertex2f>());
             logger.debug("") << "drawing v2f";
         } else if (dO.castableTo<street_environment::EnvironmentObjects>()) {
-            logger.debug("") << "drawing evo";
+            logger.debug("") << "drawing evo, it has "<<dO.getWithType<street_environment::EnvironmentObjects>()
+                                ->objects.size();
             for (const std::shared_ptr<street_environment::EnvironmentObject>
                      &eo :
                  (dO.getWithType<street_environment::EnvironmentObjects>()
