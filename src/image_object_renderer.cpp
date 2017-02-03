@@ -176,7 +176,7 @@ void ImageObjectRenderer::drawLine(float x1, float y1, float x2, float y2){
     graphics->drawLine(xToImage(x1), yToImage(y1), xToImage(x2), yToImage(y2));
 }
 
-void ImageObjectRenderer::drawRect(lms::math::Rect &r){
+void ImageObjectRenderer::drawRect(const lms::math::Rect &r){
     drawLine(r.x,r.y,r.x,r.y+r.height);
     drawLine(r.x+r.width,r.y,r.x+r.width,r.y+r.height);
     drawLine(r.x,r.y+r.height,r.x+r.width,r.y+r.height);
@@ -227,6 +227,7 @@ void ImageObjectRenderer::drawObject(const street_environment::EnvironmentObject
         for(float i = -lineWidth; i <= lineWidth; i += lineWidthStep){
             drawLine(crossing.position()-toAdd+crossing.viewDirection()*i, crossing.position()+toAdd+crossing.viewDirection()*i);
         }
+        drawRect(crossing.blockedRect());
         //drawObstacle(&crossing);
     }else if(eo->getType() == street_environment::StartLine::TYPE){
         const street_environment::StartLine &start = eo->getAsReference<const street_environment::StartLine>();
